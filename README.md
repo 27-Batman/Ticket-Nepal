@@ -504,27 +504,6 @@ http://localhost:5173/admin
 
 Administrators can manage movies, showtimes, bookings, and refund requests through the dashboard.
 
-## Screenshots
-
-Screenshots of the application can be added to the repository under `docs/screenshots/`.
-
-For example:
-
-```markdown
-![Homepage](docs/screenshots/home.png)
-```
-
-Suggested screenshots include:
-
-- Homepage
-- Movie listing
-- Movie details
-- Seat selection
-- Booking and payment
-- My Bookings
-- Admin dashboard
-- Movie and showtime management
-
 ## Future Improvements
 
 Some areas that could be improved in future versions include:
