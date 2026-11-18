@@ -1,98 +1,107 @@
-﻿# Ticket Nepal
+# Ticket Nepal
 
-A full-stack movie ticket booking web application. Users can browse now-playing movies (sourced from TMDB and locally added movies), view details and trailers, choose showtimes and seats, book tickets, pay through eSewa, download PDF tickets, and request refunds. Administrators can manage movies, showtimes, bookings, and refunds from a protected dashboard.
+A full-stack movie ticket booking web application built with React, Node.js, Express.js, and MongoDB.
 
-## Project Overview
+Ticket Nepal allows users to browse movies, watch trailers, explore available showtimes, select seats, book tickets, and make payments through eSewa. Users can also manage their bookings, download PDF tickets, submit refund requests, and review movies.
 
-Ticket Nepal is built as a monorepo with two separate applications:
+The application also includes an administrative dashboard for managing movies, showtimes, bookings, and refund requests.
 
-- `backend/` — Node.js + Express REST API backed by MongoDB (Mongoose), secured with Clerk, with Inngest background jobs and eSewa payment integration.
-- `frontend/` — React 19 + Vite + Tailwind CSS SPA with React Router and Clerk authentication.
+## Table of Contents
 
-Media assets (posters, backdrops, cast images, videos) uploaded by admins are stored on the backend under `backend/uploads/` and served as static files.
+- [Overview](#overview)
+- [Features](#features)
+- [Technology Stack](#technology-stack)
+- [Project Structure](#project-structure)
+- [Installation and Setup](#installation-and-setup)
+- [Environment Variables](#environment-variables)
+- [Database Configuration](#database-configuration)
+- [API Endpoints](#api-endpoints)
+- [Usage](#usage)
+- [Screenshots](#screenshots)
+- [Future Improvements](#future-improvements)
+- [Contributing](#contributing)
+- [License](#license)
+- [Author](#author)
 
-## Key Features
+## Overview
+
+Ticket Nepal is organized as a monorepo with two separate applications:
+
+- **Frontend:** A single-page application built with React 19, Vite, and Tailwind CSS. It handles the user interface, movie browsing, seat selection, ticket booking, and administrative dashboard.
+- **Backend:** A REST API developed using Node.js and Express.js. It handles application logic, database operations, authentication, payments, file uploads, and booking management.
+
+MongoDB is used for data storage, while Clerk manages user authentication. The application also integrates TMDB for movie information, eSewa for payment processing, and Inngest for background tasks.
+
+Movie posters, backdrops, cast images, and other uploaded media are stored on the backend and served through static file routes.
+
+## Features
 
 ### User Features
 
-- Registration and login via Clerk
-- Browse now-showing movies (TMDB + locally added movies)
-- View movie details, backdrop, runtime, rating, and YouTube trailer
-- View available showtimes grouped by date
-- Interactive seat selection (max 5 seats per booking) with occupied-seat tracking
-- Create bookings and complete payment through eSewa
-- Booking history ("My Bookings") with payment status
-- Downloadable PDF e-ticket with QR codes per seat
-- Refund request (allowed when the show is more than 2 hours away)
-- Add/remove favorite movies
-- View and post movie reviews/ratings; delete own reviews
+- Register and log in using Clerk authentication.
+- Browse currently showing movies from TMDB and locally added movies.
+- View movie details, ratings, runtime, cast, backdrops, and trailers.
+- Explore available showtimes organized by date.
+- Select seats through an interactive seat selection interface.
+- Book up to five seats in a single booking.
+- Make payments through the eSewa payment gateway.
+- View booking history and payment status.
+- Download PDF tickets with individual QR codes for each seat.
+- Submit refund requests for eligible bookings more than two hours before the show.
+- Add and remove movies from favorites.
+- Post movie reviews and ratings.
+- Delete personal reviews.
 
 ### Admin Features
 
-- Admin role verification through Clerk private metadata
-- Dashboard with total bookings, total revenue, active shows, and total users
-- Add movies (poster, backdrop, cast images, genres, runtime, YouTube trailer)
-- Add shows/showtimes with ticket price (TMDB or locally added movies)
-- List shows with booking counts and earnings
-- Delete shows (blocked when paid bookings exist)
-- List all bookings with user and show details
-- View refund requests and approve/mark them complete
+- Access a protected administrative dashboard.
+- View total bookings, revenue, active shows, and registered users.
+- Add movies with posters, backdrops, cast images, genres, runtime, and YouTube trailers.
+- Create and manage movie showtimes.
+- Set ticket prices for individual shows.
+- View show listings, booking counts, and earnings.
+- Access booking records with user and show information.
+- Review refund requests and update their status.
+- Delete shows when no paid bookings exist.
 
-### Other
+### Additional Functionality
 
-- Inngest background functions: Clerk user sync (create/update/delete) and automatic seat release + booking deletion 10 minutes after an unpaid booking
-- Static serving of uploaded media under `/uploads`
-- Vercel deployment configuration for both frontend and backend
+- Automatic user synchronization through Inngest.
+- Automatic release of seats and deletion of unpaid bookings after 10 minutes.
+- Backend file uploads and static media serving.
+- Integration with TMDB for movie information.
+- eSewa sandbox payment integration.
+- Vercel deployment configuration for frontend and backend.
 
 ## Technology Stack
 
-### Frontend
-
-- React 19
-- Vite
-- Tailwind CSS v4 (`@tailwindcss/vite`)
-- React Router DOM v7
-- Clerk React (`@clerk/clerk-react`)
-- Axios
-- React Hot Toast / React Toastify
-- Lucide React icons
-- html2canvas + jsPDF (PDF ticket generation)
-- qrcode.react
-
-### Backend
-
-- Node.js (ES modules)
-- Express 5
-- MongoDB + Mongoose
-- Clerk SDK/Express (`@clerk/clerk-sdk-node`, `@clerk/express`)
-- Inngest
-- Multer (file uploads)
-- Axios (TMDB API calls)
-- crypto / crypto-js (eSewa signature generation)
-- dotenv, cors
-
-### External Services
-
-- TMDB API (movie details, credits, videos, now playing)
-- Clerk (authentication and user management)
-- eSewa (payment gateway, sandbox/test endpoint)
-- MongoDB (local or Atlas)
+| Category | Technologies |
+|---|---|
+| Frontend | React 19, Vite |
+| Styling | Tailwind CSS v4 |
+| Routing | React Router DOM v7 |
+| Backend | Node.js, Express 5 |
+| Database | MongoDB, Mongoose |
+| Authentication | Clerk |
+| API Requests | Axios |
+| Background Jobs | Inngest |
+| Movie Data | TMDB API |
+| Payment Gateway | eSewa |
+| File Uploads | Multer |
+| PDF Generation | jsPDF, html2canvas |
+| QR Code Generation | qrcode.react |
+| Icons | Lucide React |
+| Notifications | React Hot Toast, React Toastify |
 
 ## Project Structure
 
 ```text
 Ticket-Nepal/
-├── .gitignore
-├── package.json
-├── README.md
+│
 ├── backend/
-│   ├── .env
-│   ├── index.js
-│   ├── package.json
-│   ├── server.js
-│   ├── vercel.json
 │   ├── configs/
 │   │   └── db.js
+│   │
 │   ├── controllers/
 │   │   ├── AddMovieController.js
 │   │   ├── adminControllers.js
@@ -101,11 +110,14 @@ Ticket-Nepal/
 │   │   ├── reviewController.js
 │   │   ├── ShowController.js
 │   │   └── userControllers.js
+│   │
 │   ├── inngest/
 │   │   └── index.js
+│   │
 │   ├── middleware/
 │   │   ├── auth.js
 │   │   └── authUser.js
+│   │
 │   ├── models/
 │   │   ├── AddMovie.js
 │   │   ├── Booking.js
@@ -114,6 +126,7 @@ Ticket-Nepal/
 │   │   ├── Review.js
 │   │   ├── Show.js
 │   │   └── User.js
+│   │
 │   ├── routs/
 │   │   ├── addMovieRoutes.js
 │   │   ├── adminRoutes.js
@@ -122,176 +135,202 @@ Ticket-Nepal/
 │   │   ├── reviewRoutes.js
 │   │   ├── showRoutes.js
 │   │   └── userRoutes.js
+│   │
 │   ├── uploads/
 │   │   ├── backdrops/
 │   │   ├── cast/
 │   │   ├── posters/
 │   │   └── videos/
-│   └── utils/
-│       └── esewa.js
-└── frontend/
-    ├── .env
-    ├── eslint.config.js
-    ├── index.html
-    ├── package.json
-    ├── vercel.json
-    ├── vite.config.js
-    ├── public/
-    └── src/
-        ├── App.jsx
-        ├── main.jsx
-        ├── context/
-        │   └── AppContext.jsx
-        ├── pages/
-        │   ├── Home.jsx
-        │   ├── Movies.jsx
-        │   ├── MovieDetails.jsx
-        │   ├── SeatLayout.jsx
-        │   ├── Favourite.jsx
-        │   ├── MyBooking.jsx
-        │   └── admin/
-        │       ├── AddMovie.jsx
-        │       ├── AddShows.jsx
-        │       ├── Dashbord.jsx
-        │       ├── Layout.jsx
-        │       ├── ListBooking.jsx
-        │       └── ListShows.jsx
-        ├── components/
-        └── lib/
+│   │
+│   ├── utils/
+│   │   └── esewa.js
+│   │
+│   ├── index.js
+│   ├── server.js
+│   ├── package.json
+│   └── vercel.json
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   │   └── AppContext.jsx
+│   │   ├── lib/
+│   │   ├── pages/
+│   │   │   ├── Home.jsx
+│   │   │   ├── Movies.jsx
+│   │   │   ├── MovieDetails.jsx
+│   │   │   ├── SeatLayout.jsx
+│   │   │   ├── Favourite.jsx
+│   │   │   ├── MyBooking.jsx
+│   │   │   └── admin/
+│   │   │       ├── AddMovie.jsx
+│   │   │       ├── AddShows.jsx
+│   │   │       ├── Dashbord.jsx
+│   │   │       ├── Layout.jsx
+│   │   │       ├── ListBooking.jsx
+│   │   │       └── ListShows.jsx
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   │
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.js
+│   └── vercel.json
+│
+├── .gitignore
+├── package.json
+└── README.md
 ```
 
-The project has separate `frontend/` and `backend/` directories. There is also a minimal root `package.json` containing `react` and `vite`; the actual application dependencies live in `frontend/package.json` and `backend/package.json`.
-
-## Prerequisites
-
-- Node.js 18 or newer
-- npm
-- MongoDB (local instance) or a MongoDB Atlas connection string
-- A Clerk account (publishable + secret keys)
-- A TMDB API read access token (bearer token)
-- eSewa merchant credentials (test credentials are already referenced in code; replace for production)
+The structure above highlights the main application files and directories. Some supporting components and configuration files have been omitted.
 
 ## Installation and Setup
 
-### 1. Clone the repository
+### Prerequisites
+
+Before running the project, make sure you have:
+
+- Node.js 18 or newer
+- npm
+- MongoDB (local installation or Atlas account)
+- Clerk account
+- TMDB API access token
+- Inngest account
+- eSewa merchant credentials for payment integration
+
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/27-Batman/Ticket-Nepal.git
+```
+
+Navigate to the project directory:
+
+```bash
 cd Ticket-Nepal
 ```
 
-### 2. Backend setup
+### 2. Backend Setup
+
+Navigate to the backend directory:
 
 ```bash
 cd backend
+```
+
+Install the dependencies:
+
+```bash
 npm install
 ```
 
-Create `backend/.env` (see [Environment Variables](#environment-variables)).
+Create a `.env` file inside the `backend` directory and configure the required environment variables.
 
-Start the backend in development mode:
+Start the development server:
 
 ```bash
 npm run server
 ```
 
-Or in production mode:
+To start the backend in production mode:
 
 ```bash
 npm start
 ```
 
-The backend runs on `http://localhost:3000` by default (configurable via `PORT`).
+The backend runs at:
 
-### 3. Frontend setup
+```text
+http://localhost:3000
+```
+
+### 3. Frontend Setup
+
+Open another terminal from the project root and navigate to the frontend directory:
 
 ```bash
 cd frontend
+```
+
+Install the dependencies:
+
+```bash
 npm install
 ```
 
-Create `frontend/.env` (see [Environment Variables](#environment-variables)).
+Create a `.env` file inside the `frontend` directory and add the required frontend environment variables.
 
-Start the frontend dev server:
+Start the development server:
 
 ```bash
 npm run dev
 ```
 
-Build for production:
+The frontend will be available at:
+
+```text
+http://localhost:5173
+```
+
+### 4. Build and Preview
+
+To create a production build:
 
 ```bash
 npm run build
 ```
 
-Preview the production build:
+To preview the production build locally:
 
 ```bash
 npm run preview
 ```
 
-Lint:
+To run ESLint:
 
 ```bash
 npm run lint
 ```
 
-### 4. Run both applications
-
-Open two terminals:
-
-```bash
-# Terminal 1
-cd backend
-npm run server
-```
-
-```bash
-# Terminal 2
-cd frontend
-npm run dev
-```
-
-Then open `http://localhost:5173`.
-
 ## Environment Variables
 
-### Backend (`backend/.env`)
+The application requires environment variables for database connectivity, authentication, movie data, payment processing, and communication between the frontend and backend.
+
+### Backend Configuration
+
+Create `backend/.env`:
 
 ```env
 PORT=3000
+
+# MongoDB
 MONGODB_URI=mongodb://127.0.0.1:27017/movieticket_db
 
+# Clerk Authentication
 CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 CLERK_SECRET_KEY=your_clerk_secret_key
 
+# Inngest
 INNGEST_EVENT_KEY=your_inngest_event_key
 INNGEST_SIGNING_KEY=your_inngest_signing_key
 
+# TMDB
 TMDB_API_KEY=your_tmdb_bearer_token
 
+# eSewa
 ESEWA_SECRET_KEY=your_esewa_secret_key
 ESEWA_MERCHANT_CODE=EPAYTEST
 
+# Application URLs
 BACKEND_URL=http://localhost:3000
 FRONTEND_URL=http://localhost:5173
 ```
 
-Backend variable names:
+### Frontend Configuration
 
-- `PORT` — backend listen port (defaults to 3000)
-- `MONGODB_URI` — MongoDB connection string
-- `CLERK_PUBLISHABLE_KEY` — Clerk publishable key
-- `CLERK_SECRET_KEY` — Clerk secret key
-- `INNGEST_EVENT_KEY` — Inngest event key
-- `INNGEST_SIGNING_KEY` — Inngest signing key
-- `TMDB_API_KEY` — TMDB API bearer token
-- `ESEWA_SECRET_KEY` — eSewa HMAC secret key
-- `ESEWA_MERCHANT_CODE` — eSewa merchant/product code
-- `BACKEND_URL` — backend base URL (used for callbacks)
-- `FRONTEND_URL` — frontend base URL (used for CORS and redirects)
-
-### Frontend (`frontend/.env`)
+Create `frontend/.env`:
 
 ```env
 VITE_BACKEND_URL=http://localhost:3000
@@ -300,125 +339,241 @@ VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 VITE_TMDB_BASE_URL=https://image.tmdb.org/t/p/original
 ```
 
-Frontend variable names:
+### Environment Variable Reference
 
-- `VITE_BACKEND_URL` — backend API base URL (also used for uploaded media URLs)
-- `VITE_CURRENCY` — currency symbol shown in the UI
-- `VITE_CLERK_PUBLISHABLE_KEY` — Clerk publishable key
-- `VITE_TMDB_BASE_URL` — TMDB image base URL
+| Variable | Description |
+|---|---|
+| `PORT` | Backend server port |
+| `MONGODB_URI` | MongoDB connection string |
+| `CLERK_PUBLISHABLE_KEY` | Clerk publishable key |
+| `CLERK_SECRET_KEY` | Clerk secret key |
+| `INNGEST_EVENT_KEY` | Inngest event key |
+| `INNGEST_SIGNING_KEY` | Inngest signing key |
+| `TMDB_API_KEY` | TMDB API bearer token |
+| `ESEWA_SECRET_KEY` | eSewa payment secret |
+| `ESEWA_MERCHANT_CODE` | eSewa merchant code |
+| `BACKEND_URL` | Backend application URL |
+| `FRONTEND_URL` | Frontend application URL |
+| `VITE_BACKEND_URL` | Backend API URL used by frontend |
+| `VITE_CURRENCY` | Currency symbol displayed in the application |
+| `VITE_CLERK_PUBLISHABLE_KEY` | Clerk frontend publishable key |
+| `VITE_TMDB_BASE_URL` | TMDB image base URL |
 
-Note: `frontend/.env` in this repository also contains an `ESEWA_SECRET_KEY` entry. It is not used by the frontend code and should not be shipped to the browser; keep payment secrets on the backend only.
+**Security:** Never commit `.env` files or expose private credentials in the repository. Variables prefixed with `VITE_` are included in the frontend bundle and should never contain secret keys. Keep Clerk secret keys and eSewa payment credentials on the backend.
 
 ## Database Configuration
 
-- Database: MongoDB
-- Connection: configured through `MONGODB_URI` in `backend/.env`
-- Default local URI: `mongodb://127.0.0.1:27017/movieticket_db`
-- Mongoose models: `User`, `Movie`, `AddMovie`, `Show`, `Booking`, `Review`, `Refund`
+Ticket Nepal uses MongoDB with Mongoose for database operations.
 
-To use MongoDB Atlas, replace `MONGODB_URI` with your Atlas connection string.
+You can use either a local MongoDB installation or MongoDB Atlas.
 
-## API Documentation (Summary)
+**Local MongoDB**
 
-Base URL: `http://localhost:3000`
+```env
+MONGODB_URI=mongodb://127.0.0.1:27017/movieticket_db
+```
 
-### Shows
+**MongoDB Atlas**
 
-- `GET /api/show/now-playing` — list TMDB now-playing + locally added movies
-- `POST /api/show/add` — create showtimes for a movie (admin)
-- `GET /api/show/all` — list movies with upcoming shows
-- `GET /api/show/:movieID` — single movie + showtimes
+1. Create an account on MongoDB Atlas.
+2. Create a cluster.
+3. Configure database access and network permissions.
+4. Copy your MongoDB connection string.
+5. Add the connection string to `backend/.env`.
+
+The application uses the following Mongoose models:
+
+- User
+- Movie
+- AddMovie
+- Show
+- Booking
+- Review
+- Refund
+
+The database connection is configured in `backend/configs/db.js`.
+
+## API Endpoints
+
+The backend provides REST API endpoints for movie listings, showtimes, bookings, payments, reviews, and administrative operations.
+
+**Base URL**
+
+```text
+http://localhost:3000
+```
+
+### Movies and Shows
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/show/now-playing` | Get currently showing movies |
+| POST | `/api/show/add` | Create movie showtimes |
+| GET | `/api/show/all` | Get movies with upcoming shows |
+| GET | `/api/show/:movieID` | Get movie details and showtimes |
+| POST | `/api/movies/add` | Add a movie with uploaded media |
 
 ### Bookings
 
-- `POST /api/booking/create` — create a booking (auth required)
-- `GET /api/booking/seats/:showID` — occupied seats for a show
-
-### Movies (admin uploads)
-
-- `POST /api/movies/add` — upload a movie with images/cast/trailer
-
-### Admin
-
-- `GET /api/admin/is-admin` — check admin role (auth required)
-- `GET /api/admin/dashboard` — dashboard stats (admin)
-- `GET /api/admin/all-shows` — shows with booking/earnings summary (admin)
-- `GET /api/admin/all-bookings` — all bookings (admin)
-- `DELETE /api/admin/delete-show/:id` — delete a show (admin)
-- `GET /api/admin/refund-details/:bookingId` — refund request details (admin)
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/booking/create` | Create a booking |
+| GET | `/api/booking/seats/:showID` | Get occupied seats |
 
 ### Users
 
-- `GET /api/users/bookings` — current user's bookings (auth required)
-- `POST /api/users/favorite-movie` — toggle favorite (auth required)
-- `GET /api/users/favorite` — list favorite movies (auth required)
-- `POST /api/users/refund-request` — submit refund request (auth required)
-- `GET /api/users/all` — list all users
-- `GET /api/users/me` — current user (auth required)
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/users/bookings` | Get current user's bookings |
+| POST | `/api/users/favorite-movie` | Add or remove a favorite |
+| GET | `/api/users/favorite` | Get favorite movies |
+| POST | `/api/users/refund-request` | Submit a refund request |
+| GET | `/api/users/all` | Get all users |
+| GET | `/api/users/me` | Get current user information |
+
+### Administration
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/admin/is-admin` | Check administrator access |
+| GET | `/api/admin/dashboard` | Get dashboard statistics |
+| GET | `/api/admin/all-shows` | Get shows and earnings |
+| GET | `/api/admin/all-bookings` | Get all bookings |
+| DELETE | `/api/admin/delete-show/:id` | Delete a show |
+| GET | `/api/admin/refund-details/:bookingId` | Get refund details |
 
 ### Payments
 
-- `POST /api/payment/esewa/init` — initialize eSewa payment
-- `GET /api/payment/esewa/success` — eSewa success callback
-- `GET /api/payment/esewa/failure` — eSewa failure callback
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/payment/esewa/init` | Initialize eSewa payment |
+| GET | `/api/payment/esewa/success` | Handle successful payment callback |
+| GET | `/api/payment/esewa/failure` | Handle failed payment callback |
 
 ### Reviews
 
-- `GET /api/reviews/:movieID` — list reviews for a movie
-- `POST /api/reviews/add` — add a review (auth required)
-- `DELETE /api/reviews/delete/:id` — delete own review (auth required)
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/reviews/:movieID` | Get movie reviews |
+| POST | `/api/reviews/add` | Submit a movie review |
+| DELETE | `/api/reviews/delete/:id` | Delete a personal review |
 
 ### Inngest
 
-- `POST/GET /api/inngest` — Inngest serve endpoint
+| Method | Endpoint | Description |
+|---|---|---|
+| GET/POST | `/api/inngest` | Inngest background functions endpoint |
 
-## Usage Instructions
+Protected routes require authentication, and administrative routes require administrator privileges.
 
-1. Start the backend and frontend as described above.
-2. Open `http://localhost:5173`.
-3. Sign in with Clerk.
-4. To make a user an admin, set `privateMetadata.role = "admin"` for that user in the Clerk dashboard.
-5. Browse movies, open a movie, select a date/showtime and seats, then confirm booking.
-6. Pay pending bookings from "My Bookings" via eSewa (sandbox).
-7. Download the PDF ticket for paid bookings.
-8. Admins can access `/admin` to manage movies, shows, bookings, and refunds.
+## Usage
+
+After starting both applications:
+
+1. Open `http://localhost:5173` in your browser.
+2. Register or log in using Clerk.
+3. Browse the available movies.
+4. Select a movie and view its details.
+5. Choose a showtime and select your preferred seats.
+6. Confirm the booking.
+7. Open the My Bookings section to complete payment through eSewa.
+8. Download the PDF ticket after successful payment.
+
+### Admin Access
+
+Administrator access is managed through Clerk's private metadata.
+
+To grant admin privileges:
+
+1. Open the Clerk Dashboard.
+2. Select the relevant user.
+3. Update the user's private metadata with:
+
+```json
+{
+  "role": "admin"
+}
+```
+
+4. Sign in using the administrator account.
+5. Access the admin dashboard at:
+
+```text
+http://localhost:5173/admin
+```
+
+Administrators can manage movies, showtimes, bookings, and refund requests through the dashboard.
 
 ## Screenshots
 
-No screenshots are currently included in the repository. To add them, place images under a folder such as `docs/screenshots/` and reference them here, for example:
+Screenshots of the application can be added to the repository under `docs/screenshots/`.
+
+For example:
 
 ```markdown
-![Home](docs/screenshots/home.png)
+![Homepage](docs/screenshots/home.png)
 ```
+
+Suggested screenshots include:
+
+- Homepage
+- Movie listing
+- Movie details
+- Seat selection
+- Booking and payment
+- My Bookings
+- Admin dashboard
+- Movie and showtime management
 
 ## Future Improvements
 
-- Add search/filter and pagination for movies
-- Add automated tests for backend and frontend
-- Improve error handling and validation
-- Support additional payment providers
-- Add email/SMS booking confirmations
-- Add seat map customization and multiple cinema halls
-- Add CI/CD and production environment documentation
+Some areas that could be improved in future versions include:
+
+- Movie search, filtering, and pagination.
+- Automated frontend and backend testing.
+- Improved input validation and error handling.
+- Support for additional payment providers.
+- Email and SMS booking confirmations.
+- Multiple cinema halls and customizable seat layouts.
+- More detailed administrative analytics.
+- CI/CD integration and deployment documentation.
 
 ## Contributing
 
+If you want to contribute to the project, you can follow these steps:
+
 1. Fork the repository.
-2. Create a feature branch: `git checkout -b feature/your-feature`.
-3. Commit your changes: `git commit -m "feat: describe your change"`.
-4. Push to your fork and open a pull request.
+2. Create a new branch:
+
+   ```bash
+   git checkout -b feature/your-feature
+   ```
+
+3. Make your changes and commit them:
+
+   ```bash
+   git commit -m "Describe your changes"
+   ```
+
+4. Push the branch:
+
+   ```bash
+   git push origin feature/your-feature
+   ```
+
+5. Open a Pull Request.
 
 ## License
 
-No license file is currently included in this repository. Add a `LICENSE` file (for example MIT) before distributing or using this project commercially.
+This project is licensed under the [MIT License](LICENSE).
 
-## Author / Contact
+You are free to use, modify, and distribute this software in accordance with the terms of the license.
+
+## Author
+
+**Anurag Singh**
 
 - GitHub: [27-Batman](https://github.com/27-Batman)
 - Email: anuragsing092@gmail.com
 
-## Additional Information
-
-- Project type: not specified
-- Deployment URL: not documented (Vercel configuration files are included for both frontend and backend)
-- Repository: https://github.com/27-Batman/Ticket-Nepal.git
+**Repository:** [Ticket Nepal](https://github.com/27-Batman/Ticket-Nepal)
